@@ -2,9 +2,9 @@ import 'reflect-metadata'
 import { Middleware } from 'koa'
 import { loadAppConfig } from './config/loadConfigByFile'
 import { configureLogger, LogLevel } from './config/logger'
-import { setupServer } from './setupService'
 import { invariant } from './error/invariant'
 import { getAppConfig } from './config/app'
+import koaSetupServer from '../utils/setupService'
 
 interface BootstrapConfig {
     logLevel: LogLevel
@@ -21,9 +21,12 @@ const bootstrapApp = (middlewares: Middleware[], controllers: Function[], config
         console: logLevel === 'debug'
     })
 
-    loadAppConfig(filePath)
+    const appConfig = loadAppConfig(filePath)
 
-    return setupServer(middlewares, controllers)
+    return koaSetupServer(middlewares, {
+        controllers,
+        serverPort: appConfig.serverPort,
+    })
 }
 
 
