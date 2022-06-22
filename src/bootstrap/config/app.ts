@@ -1,28 +1,15 @@
-import { ErrorType, invariant } from "../error/invariant";
-
 export interface AppConfig {
     serverPort: number
 }
 
-export class AppConfigService {
-    static service: AppConfigService;
-    private readonly config: AppConfig
+let appConfig: Partial<AppConfig> = Object.freeze({
+    serverPort: 8089
+})
 
-    static initialInstance = (config: AppConfig) => {
-        if (AppConfigService.service) {
-            return
-        }
-        AppConfigService.service = new AppConfigService(config)
-    }
+export const initialAppConfig = (config: AppConfig) => {
+    appConfig = Object.freeze(config)
+}
 
-    static getInstance() {
-        invariant(!AppConfigService.service, 'not iniaial service', ErrorType.App)
-        return AppConfigService.service;
-    }
-
-    constructor(config: AppConfig) {
-        this.config = Object.freeze(config);
-    }
-
-    getAppConfig = () => this.config
+export const getAppConfig = () => {
+    return appConfig;
 }

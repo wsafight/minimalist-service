@@ -1,19 +1,15 @@
 import 'reflect-metadata'
-import Koa from 'koa'
-import bodyParser from 'koa-bodyparser'
+import Koa, { Middleware}from 'koa'
 import { useKoaServer } from 'routing-controllers'
-import { errorMiddleware } from './middleware/error'
-import { logMiddleware } from './middleware/log'
 import { debug } from 'winston'
+import { getAppConfig } from './config/app'
 
-export const setupServer = (controllers: Function[]) => {
+export const setupServer = (middlewares: Middleware[], controllers: Function[]) => {
     const koa = new Koa()
 
-    koa.use(errorMiddleware)
-
-    koa.use(logMiddleware)
-
-    koa.use(bodyParser())
+    middlewares.forEach(middleware => {
+        koa.use(middleware);
+    })
 
     const app = useKoaServer(koa, {
         validation: false,
@@ -21,7 +17,7 @@ export const setupServer = (controllers: Function[]) => {
         controllers
     })
 
-    const serverPort = 8089
+    const serverPort = getAppConfig().serverPort || 8089
 
     debug(`service start, serverPort is ${serverPort}`)
     app.listen(serverPort)

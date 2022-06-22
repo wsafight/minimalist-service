@@ -10,6 +10,7 @@
 
 # production
 /dist
+/logs
 
 # misc
 .idea

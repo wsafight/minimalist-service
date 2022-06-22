@@ -1,7 +1,7 @@
 import { Context } from 'koa'
 import { log } from "winston";
 
-export async function logMiddleware(ctx: Context, next: () => Promise<any>) {
+export const handleLogMiddleware = async (ctx: Context, next: () => Promise<any>) => {
     const start = new Date().getTime()
     await next()
     const ms = new Date().getTime() - start
