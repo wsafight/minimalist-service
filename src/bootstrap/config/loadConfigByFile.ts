@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path'
-import { ErrorType, invariant } from '../error/invariant';
+import { invariant } from '../error/invariant';
 
 import { getAppConfig, initialAppConfig } from './app';
 
@@ -9,14 +9,14 @@ export const loadAppConfig = (configFilePath: string = '') => {
         return getAppConfig()
     }
     const filePath = path.resolve(configFilePath)
-    invariant(!fs.existsSync(filePath), `cannot found file: ${filePath}`, ErrorType.App)
+    invariant(!fs.existsSync(filePath), `cannot found file: ${filePath}`)
     const content = fs.readFileSync(filePath, 'utf-8')
     try {
         const config = JSON.parse(content)
         initialAppConfig(config)
         return getAppConfig();
     } catch (_e) {
-        invariant(true, 'cannot parse config file', ErrorType.App)
+        invariant(true, 'cannot parse config file')
     }
 }
 
